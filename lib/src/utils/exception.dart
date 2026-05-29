@@ -1,10 +1,10 @@
-class ABAPaywayException implements Exception {
+class ABAException implements Exception {
   final int statusCode;
   final String errorCode;
   final String message;
   final Map<String, dynamic>? response;
 
-  const ABAPaywayException({required this.statusCode, required this.errorCode, required this.message, this.response});
+  const ABAException({required this.statusCode, required this.errorCode, required this.message, this.response});
 
   @override
   String toString() {

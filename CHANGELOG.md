@@ -1,3 +1,4 @@
-## 0.0.1
+## 0.0.1-beta.1
 
-* TODO: Describe initial release.
+### ✨ New Features
+* Initial release for partner integration

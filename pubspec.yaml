@@ -1,7 +1,11 @@
 name: aba_payway
-description: "A new Flutter project."
-version: 0.0.1
-homepage:
+description: A Flutter plugin for the ABA PayWay merchant payment gateway, supporting partner registration, payment collection, self-activation, and onboarding in Cambodia.
+version: 0.0.1-beta.1
+
+homepage: https://www.payway.com.kh
+repository: https://github.com/huypanha/aba_payway
+issue_tracker: https://github.com/huypanha/aba_payway/issues
+documentation: https://developer.payway.com.kh
 
 environment:
   sdk: ^3.11.5
@@ -10,7 +14,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  basic_utils: ^5.8.2
   dio: ^5.9.2
+  intl: ^0.20.2
+  pointycastle: ^4.0.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
@@ -53,3 +61,18 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/to/font-from-package
+
+topics:
+  - payments
+  - abapayway
+  - checkout
+  - rest
+  - gateway
+
+platforms:
+  android:
+  ios:
+  macos:
+  windows:
+  linux:
+  web:

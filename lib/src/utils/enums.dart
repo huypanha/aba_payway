@@ -1,9 +1,13 @@
 enum ABAPaywayEnvironmentEnum { sandbox, production }
 
-enum MxBankAccountTypeEnum {
-  checking('Checking'),
-  savings('Savings');
+enum ABAActivationPlatformSourceEnum { web, nativeApp }
+
+enum ABAMerchantTypeEnum { inStore, online }
+
+enum ABACurrencyEnum {
+  khr('KHR'),
+  usd('USD');
 
   final String name;
-  const MxBankAccountTypeEnum(this.name);
+  const ABACurrencyEnum(this.name);
 }
