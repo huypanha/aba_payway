@@ -1,5 +1,5 @@
 name: aba_payway
-description: A Flutter plugin for the ABA PayWay merchant payment gateway, supporting partner registration, payment collection, self-activation, and onboarding in Cambodia.
+description: A Flutter plugin for the ABA PayWay merchant payment gateway, supporting partner registration, and self-activation onboarding in Cambodia.
 version: 0.0.1-beta.1
 
 homepage: https://www.payway.com.kh

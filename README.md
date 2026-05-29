@@ -1,5 +1,7 @@
 # ABA Payway
 
+<img src="assets/images/payway_logo.png" alt="Logo" width="100%" />
+
 A Flutter plugin for the ABA PayWay merchant payment gateway, supporting partner registration and self-activation onboarding in Cambodia.
 
 This package enables partners to integrate ABA PayWay self-activation capabilities within their Flutter applications, allowing merchants to onboard online or in-store with custom configuration, currency (USD/KHR), and environment support (Sandbox & Production).
