@@ -1,4 +1,4 @@
-class ABAGetMerchantResponseDataModel {
+class ABAInquiryMerchantResponseDataModel {
   final String? outletName;
   final String? abaAccountKhr;
   final String? abaAccountUsd;
@@ -6,7 +6,7 @@ class ABAGetMerchantResponseDataModel {
   final Map<String, dynamic>? enabledPaymentMethods;
   final Map<String, dynamic>? pendingPaymentMethods;
 
-  ABAGetMerchantResponseDataModel({
+  ABAInquiryMerchantResponseDataModel({
     this.outletName,
     this.abaAccountKhr,
     this.abaAccountUsd,
@@ -15,8 +15,8 @@ class ABAGetMerchantResponseDataModel {
     this.pendingPaymentMethods,
   });
 
-  factory ABAGetMerchantResponseDataModel.fromJson(dynamic json) {
-    return ABAGetMerchantResponseDataModel(
+  factory ABAInquiryMerchantResponseDataModel.fromJson(dynamic json) {
+    return ABAInquiryMerchantResponseDataModel(
       outletName: json['outlet_name'],
       abaAccountKhr: json['aba_account_khr'],
       abaAccountUsd: json['aba_account_usd'],

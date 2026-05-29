@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:pointycastle/export.dart';
 
-String opensslEncrypt(Map<String, dynamic> data, String publicKey) {
+String opensslEncrypt(String data, String publicKey) {
   final pubKey = CryptoUtils.rsaPublicKeyFromPem(publicKey);
   final cipher = PKCS1Encoding(RSAEngine())..init(true, PublicKeyParameter<RSAPublicKey>(pubKey));
-  final input = Uint8List.fromList(utf8.encode(jsonEncode(data)));
+  final input = Uint8List.fromList(utf8.encode(data));
   final output = BytesBuilder();
   final maxChunkSize = cipher.inputBlockSize;
 

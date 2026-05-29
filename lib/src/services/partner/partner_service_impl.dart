@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:aba_payway/src/models/partner/get_merchant_response_model.dart';
+import 'package:aba_payway/src/models/partner/inquiry_merchant_response_model.dart';
 import 'package:aba_payway/src/utils/exception.dart';
 import 'package:aba_payway/src/utils/openssl.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/partner/inquiry_merchant_by_key_request_model.dart';
 import '../../models/partner/register_merchant_request_model.dart';
 import '../../models/partner/register_merchant_response_model.dart';
 import '../../utils/hash.dart';
@@ -29,14 +30,14 @@ class ABAPartnerServiceImpl implements ABAPartnerService {
       throw ABAException(statusCode: 400, errorCode: 'PTL04', message: 'The partnerId field is required');
     }
 
-    final reqData = opensslEncrypt(request.requestData, _apiService.publicKey);
+    final reqData = opensslEncrypt(jsonEncode(request.requestData), _apiService.publicKey);
     final reqTime = DateFormat('YYYYMMDDHHmmss').format(.now().toUtc());
     final body = {
       'request_time': reqTime,
       'partner_id': _apiService.partnerId,
       'request_data': reqData,
       'reference_id': request.registerRef,
-      'hash': generateHash(data: "${_apiService.partnerId}$reqData$reqTime", partnerId: _apiService.partnerId),
+      'hash': generateHash(data: "${_apiService.partnerId}$reqData$reqTime", publicKey: _apiService.partnerId),
     };
     final response = await _apiService.post('$_route/new-merchant', data: jsonEncode(body));
     if (response.statusCode == 200) {
@@ -47,7 +48,7 @@ class ABAPartnerServiceImpl implements ABAPartnerService {
   }
 
   @override
-  Future<ABAGetMerchantResponseModel> getMerchantByRegisterRef(String registerRef) async {
+  Future<ABAInquiryMerchantResponseModel> inquiryMerchantByRef(String registerRef) async {
     if (_apiService.publicKey == '') {
       throw ABAException(statusCode: 400, errorCode: 'PTL04', message: 'The publicKey field is required');
     }
@@ -55,17 +56,50 @@ class ABAPartnerServiceImpl implements ABAPartnerService {
       throw ABAException(statusCode: 400, errorCode: 'PTL04', message: 'The partnerId field is required');
     }
 
-    final reqData = opensslEncrypt({'register_ref': registerRef}, _apiService.publicKey);
+    final reqData = opensslEncrypt(jsonEncode({'register_ref': registerRef}), _apiService.publicKey);
     final reqTime = DateFormat('YYYYMMDDHHmmss').format(.now().toUtc());
     final body = {
       'request_time': reqTime,
       'partner_id': _apiService.partnerId,
       'request_data': reqData,
-      'hash': generateHash(data: "${_apiService.partnerId}$reqData$reqTime", partnerId: _apiService.partnerId),
+      'hash': generateHash(data: "${_apiService.partnerId}$reqData$reqTime", publicKey: _apiService.partnerId),
     };
     final response = await _apiService.post('$_route/get-mc-credential-info', data: jsonEncode(body));
     if (response.statusCode == 200) {
-      return ABAGetMerchantResponseModel.fromJson(response.data);
+      return ABAInquiryMerchantResponseModel.fromJson(response.data);
+    } else {
+      throw errorParserResponse(response);
+    }
+  }
+
+  @override
+  Future<ABAInquiryMerchantResponseModel> inquiryMerchantByKey(ABAInquiryMerchantByKeyRequestModel request) async {
+    if (_apiService.publicKey == '') {
+      throw ABAException(statusCode: 400, errorCode: 'PTL04', message: 'The publicKey field is required');
+    }
+    if (_apiService.partnerId == '') {
+      throw ABAException(statusCode: 400, errorCode: 'PTL04', message: 'The partnerId field is required');
+    }
+
+    final reqTime = DateFormat('YYYYMMDDHHmmss').format(.now().toUtc());
+    final concatData = '${_apiService.partnerId}${request.merchantKey}$reqTime';
+    final reqData = opensslEncrypt(
+      jsonEncode({
+        'merchant_key': request.merchantKey,
+        'public_key_hash_encrypt': generateHash(data: concatData, publicKey: request.apiKey),
+        'rsa_public_key_hash_encrypt': request.rsaPublicKey != null ? opensslEncrypt(concatData, request.rsaPublicKey!) : '',
+      }),
+      _apiService.publicKey,
+    );
+    final body = {
+      'request_time': reqTime,
+      'partner_id': _apiService.partnerId,
+      'request_data': reqData,
+      'hash': generateHash(data: "${_apiService.partnerId}$reqData$reqTime", publicKey: _apiService.partnerId),
+    };
+    final response = await _apiService.post('$_route/get-mc-credential-info', data: jsonEncode(body));
+    if (response.statusCode == 200) {
+      return ABAInquiryMerchantResponseModel.fromJson(response.data);
     } else {
       throw errorParserResponse(response);
     }

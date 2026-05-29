@@ -10,19 +10,11 @@ class ABAPayway {
   ABAPayway({
     required String privateKey,
     required String publicKey,
-    String merchantId = '',
     String partnerId = '',
     String partnerReferer = '',
     ABAPaywayEnvironmentEnum env = .sandbox,
   }) {
-    _apiService = ApiService(
-      privateKey: privateKey,
-      publicKey: publicKey,
-      partnerId: partnerId,
-      partnerReferer: partnerReferer,
-      env: env,
-      merchantId: merchantId,
-    );
+    _apiService = ApiService(privateKey: privateKey, publicKey: publicKey, partnerId: partnerId, partnerReferer: partnerReferer, env: env);
     partner = ABAPartnerServiceImpl(_apiService);
   }
 }

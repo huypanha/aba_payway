@@ -25,28 +25,13 @@ class ABAPaywayHomePage extends StatefulWidget {
 }
 
 class _ABAPaywayHomePageState extends State<ABAPaywayHomePage> with TickerProviderStateMixin {
-  final _txtPublicKey = TextEditingController(text: '');
-  final _txtPrivateKey = TextEditingController(text: '');
-  final _txtPartnerId = TextEditingController(text: '');
-  final _txtReferer = TextEditingController(text: '');
-
-  @override
-  void dispose() {
-    _txtPublicKey.dispose();
-    _txtPrivateKey.dispose();
-    _txtPartnerId.dispose();
-    _txtReferer.dispose();
-    super.dispose();
-  }
-
   Future partner() async {
     final abaPayway = ABAPayway(
-      publicKey: _txtPublicKey.text,
-      privateKey: _txtPrivateKey.text,
-      merchantId: 'EC0001',
-      env: .sandbox,
-      partnerId: _txtPartnerId.text,
-      partnerReferer: _txtReferer.text,
+      publicKey: 'YOUR_PUBLIC_KEY',
+      privateKey: 'YOUR_PRIVATE_KEY',
+      partnerId: 'YOUR_PARTNER_ID',
+      partnerReferer: 'YOUR_PARTNER_REFERER',
+      env: .sandbox, // or .production
     );
 
     // Register a merchant
@@ -61,10 +46,17 @@ class _ABAPaywayHomePageState extends State<ABAPaywayHomePage> with TickerProvid
       ),
     );
     log('registerResponse = ${registerResponse.toJson()}');
-    launchUrl(Uri.parse(registerResponse.status.toString()));
+    if (await canLaunchUrl(Uri.parse(registerResponse.status.toString()))) {
+      await launchUrl(Uri.parse(registerResponse.status.toString()));
+    }
 
-    final getMerchantByRef = await abaPayway.partner.getMerchantByRegisterRef('Merchant001');
+    final getMerchantByRef = await abaPayway.partner.inquiryMerchantByRef('Merchant001');
     log('getMerchantByRef = ${getMerchantByRef.data?.toJson()}');
+
+    final getMerchantByKey = await abaPayway.partner.inquiryMerchantByKey(
+      ABAInquiryMerchantByKeyRequestModel(merchantKey: 'ec000002', apiKey: 'f38cdeba-b3832-37377-b15c-XXXXXXXXXXXX'),
+    );
+    log('getMerchantByKey = ${getMerchantByKey.data?.toJson()}');
   }
 
   @override

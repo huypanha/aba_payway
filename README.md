@@ -84,19 +84,35 @@ if (response.status.code == '00') {
 }
 ```
 
-### 3. Retrieve Merchant Credentials and Status
+### 3. Inquiry Merchant Credentials and Status
 
 Check the status and obtain credentials of a registered merchant using the registration reference:
 
 ```dart
 try {
-  final result = await abaPayway.partner.getMerchantByRegisterRef('UNIQUE_MERCHANT_REF_001');
+  // For scan and link your ABA account option
+  final result = await abaPayway.partner.inquiryMerchantByRef('UNIQUE_MERCHANT_REF_001');
   
   if (result.status.code == '00') {
     final merchantData = result.data;
     print('Merchant Data: ${merchantData?.toJson()}');
   } else {
     print('Status Info: ${result.status.message}');
+  }
+  
+  // For configure existing API keys option
+  final result2 = await abaPayway.partner.inquiryMerchantByKey(
+    ABAInquiryMerchantByKeyRequestModel(
+      merchantKey: 'ec000002',
+      apiKey: 'f38cdeba-b3832-37377-b15c-XXXXXXXXXXXX'
+    ),
+  );
+  
+  if (result2.status.code == '00') {
+    final merchantData = result2.data;
+    print('Merchant Data: ${merchantData?.toJson()}');
+  } else {
+    print('Status Info: ${result2.status.message}');
   }
 } on ABAException catch (e) {
   print('ABA Error: ${e.message} (Code: ${e.errorCode})');

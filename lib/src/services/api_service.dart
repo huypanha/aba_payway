@@ -6,7 +6,6 @@ class ApiService {
   String privateKey;
   String publicKey;
   String partnerId;
-  String merchantId;
   ABAPaywayEnvironmentEnum env;
 
   String get _baseUrl {
@@ -18,14 +17,7 @@ class ApiService {
     }
   }
 
-  ApiService({
-    required this.privateKey,
-    required this.publicKey,
-    this.merchantId = '',
-    this.partnerId = '',
-    required this.env,
-    String partnerReferer = '',
-  }) {
+  ApiService({required this.privateKey, required this.publicKey, this.partnerId = '', required this.env, String partnerReferer = ''}) {
     _dio.options = _dio.options..headers['referer'] = partnerReferer;
   }
 
